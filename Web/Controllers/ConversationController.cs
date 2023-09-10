@@ -26,7 +26,7 @@ namespace Web.Controllers
 
             object response = new
             {
-                status = OperationState.Success,
+                status = (int)OperationState.Success,
                 user_id = user.Id
             };
 
@@ -46,7 +46,7 @@ namespace Web.Controllers
                 operationState = OperationState.UserNotFound;
             }
 
-            object response = new { status = operationState };
+            object response = new { status = (int)operationState };
 
             return CreatedAtAction(nameof(Delete), response);
         }
@@ -74,7 +74,7 @@ namespace Web.Controllers
 
             return new
             {
-                status = OperationState.Success,
+                status = (int)OperationState.Success,
                 messages
             };
         }
@@ -84,7 +84,7 @@ namespace Web.Controllers
             DialogUser? user = await _userRepository.GetUser(userId);
 
             return user is null
-                ? new { status = OperationState.UserNotFound }
+                ? new { status = (int)OperationState.UserNotFound }
                 : await CreateMessageListResponse(user!);
         }
 
@@ -96,7 +96,7 @@ namespace Web.Controllers
 
             return new
             {
-                status = OperationState.Success,
+                status = (int)OperationState.Success,
                 name = dialogUser.Name,
                 messages
             };
