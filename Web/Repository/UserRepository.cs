@@ -7,11 +7,13 @@ namespace Web.Repository
     {
         private readonly List<DialogUser> _users;
         private readonly List<UserMessage> _userMessages;
+        private readonly ILogger<IUserRepository> _logger;
 
-        public UserRepository(IEntityStorage entityStorage)
+        public UserRepository(IEntityStorage entityStorage, ILogger<IUserRepository> logger)
         {
             _users = entityStorage.Users;
             _userMessages = entityStorage.UserMessages;
+            _logger = logger;
         }
 
         public Task<DialogUser?> GetUser(int id) => Task.FromResult(_users.FirstOrDefault(x => x.Id == id));
@@ -29,6 +31,8 @@ namespace Web.Repository
                 user = new DialogUser(userId, name);
 
                 _users.Add(user);
+
+                _logger.LogInformation($"Create a new user with id={userId}");
             }
             
             return Task.FromResult(user!);
@@ -40,6 +44,8 @@ namespace Web.Repository
                 ?? throw new KeyNotFoundException("No such user");
 
             _users.Remove(user);
+
+            _logger.LogInformation($"Delete user with id={user.Id}");
 
             //TODO:if we use a real DB, it should be cascade on delete            
             UserMessage[] toDelete = _userMessages
