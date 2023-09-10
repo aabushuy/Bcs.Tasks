@@ -41,7 +41,7 @@ namespace Web.Repository
 
             _users.Remove(user);
 
-            //TODO:if we use a read DB, it should be cascade on delete            
+            //TODO:if we use a real DB, it should be cascade on delete            
             UserMessage[] toDelete = _userMessages
                 .Where(um => um.User == user)
                 .ToArray();

@@ -33,6 +33,24 @@ namespace Web.Controllers
             return CreatedAtAction(nameof(Add), response);
         }
 
+        [HttpGet("delete/{user_Id}")]
+        public async Task<ActionResult> Delete(int user_Id)
+        {
+            OperationState operationState = OperationState.Success;
+            try
+            {
+                await _userRepository.DeleteUser(user_Id);
+            }
+            catch (KeyNotFoundException)
+            {
+                operationState = OperationState.UserNotFound;
+            }
+
+            object response = new { status = operationState };
+
+            return CreatedAtAction(nameof(Delete), response);
+        }
+
         [HttpGet("list")]
         [HttpGet("list/{user_Id}")]
         public async Task<ActionResult> GetList(int? user_Id)
@@ -82,24 +100,6 @@ namespace Web.Controllers
                 name = dialogUser.Name,
                 messages
             };
-        }
-
-        [HttpGet("delete/{user_Id}")]
-        public async Task<ActionResult> Delete(int user_Id)
-        {
-            OperationState operationState = OperationState.Success;
-            try
-            {
-                await _userRepository.DeleteUser(user_Id);
-            }
-            catch (KeyNotFoundException)
-            {
-                operationState = OperationState.UserNotFound;
-            }
-
-            object response = new { status = operationState };
-
-            return CreatedAtAction(nameof(Delete), response);
         }
     }
 }
